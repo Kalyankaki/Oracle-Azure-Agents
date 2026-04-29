@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname, useSearchParams } from "next/navigation";
-import { Layers, GitCompare } from "lucide-react";
+import { Layers, GitCompare, Sunrise } from "lucide-react";
 import { TIERS, type IqLayer, type TierId } from "@/lib/data/tiers";
 import { cn } from "@/lib/utils";
 
@@ -29,6 +29,7 @@ export default function Sidebar() {
 
   const activeTier = pathname.startsWith("/tier/") ? pathname.split("/")[2] : null;
   const isCompare = pathname.startsWith("/compare");
+  const isExec = pathname.startsWith("/exec-summary");
 
   return (
     <aside className="flex w-72 shrink-0 flex-col border-r border-white/10 bg-navy-900/60">
@@ -45,7 +46,7 @@ export default function Sidebar() {
       <nav className="flex flex-col gap-1.5 px-3">
         {TIERS.map((tier) => {
           const href = `/tier/${tier.id}${qs}`;
-          const isActive = activeTier === tier.id && !isCompare;
+          const isActive = activeTier === tier.id && !isCompare && !isExec;
           return (
             <Link
               key={tier.id}
@@ -111,8 +112,28 @@ export default function Sidebar() {
             2×2
           </span>
         </Link>
-        <div className="mt-1 px-3 text-[11px] text-muted">
+        <div className="mb-2 mt-1 px-3 text-[11px] text-muted">
           Same prompt, four tiers, side-by-side.
+        </div>
+
+        <Link
+          href="/exec-summary"
+          className={cn(
+            "group relative flex items-center gap-2 rounded-lg border px-3 py-3 text-sm font-semibold transition",
+            "before:absolute before:left-0 before:top-3 before:h-[calc(100%-1.5rem)] before:w-[3px] before:rounded-r-full before:bg-iq-yellow before:opacity-0 before:transition-opacity",
+            isExec
+              ? "border-white/10 bg-white/5 before:opacity-100"
+              : "border-transparent hover:border-white/10 hover:bg-white/[0.03]",
+          )}
+        >
+          <Sunrise className="h-4 w-4 text-iq-yellow" />
+          Exec Summary
+          <span className="ml-auto font-mono text-[9px] uppercase tracking-widest text-iq-yellow">
+            Today
+          </span>
+        </Link>
+        <div className="mt-1 px-3 text-[11px] text-muted">
+          All three scenarios, condensed to a morning briefing.
         </div>
       </div>
 
